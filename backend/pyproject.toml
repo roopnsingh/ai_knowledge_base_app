@@ -1,0 +1,15 @@
+[project]
+name = "backend"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.14"
+dependencies = [
+    "asyncpg>=0.31.0",
+    "cython>=3.2.4",
+    "fastapi[standard]>=0.128.7",
+    "psycopg2-binary>=2.9.11",
+    "pydantic>=2.12.5",
+    "sqlalchemy>=2.0.46",
+    "uvicorn>=0.40.0",
+]

@@ -1,0 +1,42 @@
+from pydantic_settings import BaseSettings
+from typing import List
+class Settings(BaseSettings):
+
+    # Project SetUp
+    PROJECT_NAME: str = "AI_KNOWLEDGEBASE_APP"
+    DEBUG: bool = True
+
+    # Database SetUp
+    DATABASE_URL: str
+
+
+    # Auth Variables
+    SECRET_KEY: str
+    ALGORITHM: str = "HS256"
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
+    REFRESH_TOKEN_EXPIRE_DAYS: int = 7
+
+    # API Keys
+    ANTHROPIC_API_KEY: str
+    OPENAI_API_KEY: str = ""  # Optional
+    
+    # Redis (optional for now)
+    REDIS_URL: str = "redis://localhost:6379/0"
+    
+    # File Upload
+    MAX_UPLOAD_SIZE: int = 10485760  # 10MB
+    UPLOAD_DIR: str = "./uploads"
+    ALLOWED_EXTENSIONS: List[str] = [".pdf", ".docx", ".txt", ".md"]
+    
+    # Vector Settings
+    VECTOR_DIMENSION: int = 1536  # OpenAI embedding size
+    CHUNK_SIZE: int = 1000
+    CHUNK_OVERLAP: int = 200
+    
+    # CORS
+    ALLOWED_ORIGINS: List[str] = ["http://localhost:3000", "http://localhost:8000"]
+
+    class Config:
+        env_file = ".env"
+        case_sensitive = True
+

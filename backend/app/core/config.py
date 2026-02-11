@@ -1,7 +1,7 @@
+from tkinter.constants import SE
 from pydantic_settings import BaseSettings
 from typing import List
 class Settings(BaseSettings):
-
     # Project SetUp
     PROJECT_NAME: str = "AI_KNOWLEDGEBASE_APP"
     DEBUG: bool = True
@@ -40,3 +40,4 @@ class Settings(BaseSettings):
         env_file = ".env"
         case_sensitive = True
 
+settings = Settings()

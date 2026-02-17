@@ -1,8 +1,10 @@
 from datetime import timedelta, datetime, timezone
+from argon2.exceptions import VerificationError, VerifyMismatchError
 from jose import jwt, JWTError
 from typing import Optional
+from argon2 import PasswordHasher
 
-from core.config import settings
+from app.core.config import settings
 
 def get_access_token(subject: str | int, expires_delta: Optional[timedelta] = None) -> str:
     if expires_delta is not None:
@@ -18,3 +20,13 @@ def get_access_token(subject: str | int, expires_delta: Optional[timedelta] = No
     }
 
     return jwt.encode(payload, settings.SECRET_KEY, settings.ALGORITHM)
+
+ph = PasswordHasher(time_cost=3, memory_cost=65536, parallelism=4)
+def get_password_hash(password: str) -> str:
+    return ph.hash(password)
+
+def verify_password(password: str, hashed_password: str) -> bool:
+    try:
+        return ph.verify(hashed_password, password)
+    except (VerificationError, VerifyMismatchError):
+        return False

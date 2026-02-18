@@ -1,11 +1,13 @@
+from uuid import UUID
 from pydantic import BaseModel, ConfigDict, EmailStr, field_validator, Field
 from typing import Optional
 import re
 
 class User(BaseModel):
     model_config = ConfigDict(from_attributes=True)
+    id: UUID
     username: str
-    email: str
+    email: EmailStr
 
 class UserCreate(BaseModel):
     first_name: str
@@ -38,7 +40,9 @@ class UserUpdate(BaseModel):
 
     @field_validator("password")
     @classmethod
-    def validate_password(cls, value: str) -> str:
+    def validate_password(cls, value: Optional[str]) -> Optional[str]:
+        if value is None:
+            return value
         pwd = value
 
         if not re.search(r"[A-Z]", pwd):
@@ -53,7 +57,7 @@ class UserUpdate(BaseModel):
         return value
 
 class UserLogin(BaseModel):
-    email_or_username: EmailStr | str
+    email: EmailStr
     password: str
 
 class Token(BaseModel):

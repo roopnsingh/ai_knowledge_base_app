@@ -1,4 +1,5 @@
 from typing import AsyncGenerator
+from uuid import UUID
 from pydantic import ValidationError
 from sqlalchemy.ext.asyncio import AsyncSession
 from fastapi.security import OAuth2PasswordBearer
@@ -28,15 +29,22 @@ async def get_current_user(
     )
 
     try:
-        payload = jwt.decode(token=token, key=settings.SECRET_KEY, algorithms=[settings.ALGORITHM],)
-        username: str | None = payload.get("sub")
-        if username is None:
+        payload = jwt.decode(
+            token=token,
+            key=settings.SECRET_KEY,
+            algorithms=[settings.ALGORITHM],
+            options={"verify_aud": False},
+        )
+        token_type = payload.get("type")
+        sub = payload.get("sub")
+        iss = payload.get("iss")
+        if token_type != "access" or sub is None or iss != settings.PROJECT_NAME:
             raise credentials_exception
-
-    except (JWTError, ValidationError):
+        user_id = UUID(sub)
+    except (JWTError, ValidationError, ValueError):
         raise credentials_exception
 
-    user = await user_services.get_user_by_username(db, username=username)
+    user = await user_services.get_user(db, user_id=user_id)
 
     if user is None:
         raise credentials_exception

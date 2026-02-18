@@ -3,7 +3,7 @@ name = "backend"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
-requires-python = ">=3.14"
+requires-python = ">=3.11"
 dependencies = [
     "asyncpg>=0.31.0",
     "cython>=3.2.4",
@@ -14,4 +14,6 @@ dependencies = [
     "sqlalchemy>=2.0.46",
     "uvicorn>=0.40.0",
     "argon2-cffi>=25.1.0",
+    "pgvector>=0.4.2",
+    "alembic>=1.18.4",
 ]

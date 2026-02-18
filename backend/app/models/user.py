@@ -5,9 +5,9 @@ from sqlalchemy import Boolean, DateTime, String, func
 from sqlalchemy.orm import mapped_column, Mapped
 from sqlalchemy.dialects.postgresql import UUID
 
-from database.base import Base
+from app.database.base import Base
 
-class UserRole(str, enum.ENUM):
+class UserRole(str, enum.Enum):
     USER = "user"
     ADMIN =  "admin"
 

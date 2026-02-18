@@ -1,4 +1,5 @@
 from datetime import timedelta, datetime, timezone
+from uuid import UUID
 from argon2.exceptions import VerificationError, VerifyMismatchError
 from jose import jwt, JWTError
 from typing import Optional
@@ -6,17 +7,18 @@ from argon2 import PasswordHasher
 
 from app.core.config import settings
 
-def get_access_token(subject: str | int, expires_delta: Optional[timedelta] = None) -> str:
+def get_access_token(subject: UUID, expires_delta: Optional[timedelta] = None) -> str:
     if expires_delta is not None:
         expire = datetime.now(timezone.utc) + expires_delta
     else: 
         expire = datetime.now(timezone.utc) + timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
-        now = datetime.now(timezone.utc)
+    now = datetime.now(timezone.utc)
     payload = {
         "iat": now,
         "exp": expire,
         "sub": str(subject),
-        "type": "access"
+        "type": "access",
+        "iss": settings.PROJECT_NAME,
     }
 
     return jwt.encode(payload, settings.SECRET_KEY, settings.ALGORITHM)

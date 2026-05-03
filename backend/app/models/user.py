@@ -1,9 +1,10 @@
-from uuid import UUID
 from datetime import datetime
-import uuid, enum
+import enum
+import uuid
+
 from sqlalchemy import Boolean, DateTime, String, func
-from sqlalchemy.orm import mapped_column, Mapped
 from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.orm import Mapped, mapped_column
 
 from app.database.base import Base
 
@@ -14,7 +15,7 @@ class UserRole(str, enum.Enum):
 class User(Base):
     __tablename__ = "users"
 
-    id: Mapped[uuid.UUID] = mapped_column(UUID[UUID](as_uuid=True), primary_key=True, default=uuid.uuid4)
+    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     first_name: Mapped[str] = mapped_column(String(255), nullable=False)
     last_name: Mapped[str] = mapped_column(String(255))
     username: Mapped[str] = mapped_column(String(255), nullable=False, unique=True, index=True)

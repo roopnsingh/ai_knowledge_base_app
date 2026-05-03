@@ -1,13 +1,18 @@
-from pydantic_settings import BaseSettings
 from typing import List
+
+from pydantic import Field
+from pydantic_settings import BaseSettings, SettingsConfigDict
+
+
 class Settings(BaseSettings):
-    # Project SetUp
+    model_config = SettingsConfigDict(env_file=".env", case_sensitive=True)
+
+    # Project setup
     PROJECT_NAME: str = "AI_KNOWLEDGEBASE_APP"
     DEBUG: bool = False
 
-    # Database SetUp
+    # Database setup
     DATABASE_URL: str
-
 
     # Auth Variables
     SECRET_KEY: str
@@ -15,28 +20,21 @@ class Settings(BaseSettings):
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
     REFRESH_TOKEN_EXPIRE_DAYS: int = 7
 
-    # # API Keys
-    # ANTHROPIC_API_KEY: str
-    # OPENAI_API_KEY: str = ""  # Optional
-    
-    # # Redis (optional for now)
-    # REDIS_URL: str = "redis://localhost:6379/0"
-    
-    # # File Upload
-    # MAX_UPLOAD_SIZE: int = 10485760  # 10MB
-    # UPLOAD_DIR: str = "./uploads"
-    # # ALLOWED_EXTENSIONS: List[str] = [".pdf", ".docx", ".txt", ".md"]
-    
-    # # Vector Settings
-    # VECTOR_DIMENSION: int = 1536  # OpenAI embedding size
-    # CHUNK_SIZE: int = 1000
-    # CHUNK_OVERLAP: int = 200
-    
-    # CORS
-    ALLOWED_ORIGINS: List[str] = ["http://localhost:3000", "http://localhost:8000"]
+    # LLM setup
+    OPENAI_API_KEY: str
+    OPENAI_CHAT_MODEL: str = "gpt-4o-mini"
+    OPENAI_EMBEDDING_MODEL: str = "text-embedding-3-small"
 
-    class Config:
-        env_file = ".env"
-        case_sensitive = True
+    # Knowledge base tuning
+    VECTOR_DIMENSION: int = 1536
+    CHUNK_SIZE: int = 1000
+    CHUNK_OVERLAP: int = 150
+    TOP_K_MATCHES: int = 4
+    MAX_CONTEXT_CHARS: int = 8000
+
+    # CORS (comma-separated via env is supported by pydantic-settings as JSON.
+    # Keeping defaults simple for local development.)
+    ALLOWED_ORIGINS: List[str] = ["http://localhost:3000", "http://localhost:8000"]
+    ENVIRONMENT: str = Field(default="local")
 
 settings = Settings()
